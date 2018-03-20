@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import ChatBar      from './ChatBar.jsx';
-
 import MessageList  from './MessageList.jsx'
 
 
@@ -9,24 +8,29 @@ class App extends Component {
     super(props)
     this.state = {
       currentUser: {name: "Bob"},
-      messages: [
-        {
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-          id: 75928
-        },
-        {
-          username: "Anonymous",
-          content: "No, I think you lost them. you lost your marbles Bob. You lost them for good.",
-          id: 93758
-        }
-      ]
+      messages: []
 
     }
   }
 
   componentDidMount() {
     console.log("componentDidMount <App />");
+
+    this.socket = new WebSocket("ws://localhost:3001")
+    console.log("connected to the server")
+
+
+    this.socket.onmessage = (newMessage) => {
+      const parsedMessage = JSON.parse(newMessage.data)
+      const constructedMessage = [{
+        content: parsedMessage.content,
+        id: parsedMessage.id,
+        username: parsedMessage.username
+      }]
+      const mess = this.state.messages.concat(constructedMessage)
+      this.setState({messages: mess})
+    }
+
     setTimeout(() => {
       console.log("Simulating incoming message");
       // Add a new message to the list of messages in the data store
@@ -38,13 +42,21 @@ class App extends Component {
     }, 3000);
   }
 
-  newMessage = (evt) => {
+  addMessage = (evt) => {
     if(evt.key === 'Enter') {
-      let newEntry = {id: 45236, content: evt.target.value, username: this.state.currentUser.name}
-      this.setState(this.state.messages = this.state.messages.concat(newEntry))
+
+      let newEntry = { content: evt.target.value, username: this.state.currentUser.name}
+      this.socket.send(JSON.stringify(newEntry))
+
+      // this.setState(this.state.messages = this.state.messages.concat(newEntry))
       evt.target.value = ''
     }
   }
+
+
+  // this.socket.onmessage = (data) => {
+  //   console.log(JSON.parse(data))
+  // }
 
   render() {
 
@@ -55,7 +67,7 @@ class App extends Component {
         </nav>
           <MessageList messages={this.state.messages}/>
 
-        <ChatBar newMessage={this.newMessage} currentUser={this.state.currentUser.name}/>
+        <ChatBar addMessage={this.addMessage} currentUser={this.state.currentUser.name}/>
     </div>);
   }
 

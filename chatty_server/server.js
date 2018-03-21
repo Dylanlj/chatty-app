@@ -23,18 +23,59 @@ const wss = new SocketServer({ server });
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
-  ws.on('message', (evt) => {
-    let data = JSON.parse(evt)
-    data.id = uuidv1()
+
+  const outgoingEvent = (data) => {
     wss.clients.forEach(function each(client) {
-      if (client === ws && client.readyState === ws.OPEN) {
-      client.send(JSON.stringify(data));
+
+      if (client.readyState === ws.OPEN) {
+        client.send(JSON.stringify(data));
       }
     });
+  }
+
+  let connectionData = {
+    content: "A new user has joined the chatroom",
+    type: "incomingNotification",
+    numberOfUsers: wss.clients.size
+  };
+
+  outgoingEvent(connectionData)
+
+
+
+  // wss.clients.forEach(function each(client) {
+  //   data.content = "A new user has joined the chatroom"
+  //   data.type = "incomingNotification"
+  //   data.numberOfUsers = wss.clients.size
+  //   if (client.readyState === ws.OPEN) {
+  //     client.send(JSON.stringify(data));
+  //   }
+  // });
+
+
+
+  ws.on('message', (evt) => {
+    let data = JSON.parse(evt)
+
+    if(data.type === "postNotification") {
+      data.type = "incomingNotification"
+      console.log("receiving name change notification")
+    } else if (data.type === "postMessage") {
+      data.id = uuidv1()
+      data.type = "incomingMessage"
+    }
+    outgoingEvent(data)
+
   })
 
 
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () =>
+    {
+      connectionData.numberOfUsers = wss.clients.size
+      connectionData.content = "A user has left the chatroom"
+      outgoingEvent(connectionData)
+      console.log('Client disconnected')
+    });
 });

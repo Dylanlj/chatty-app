@@ -8,11 +8,27 @@ class MessageList extends Component {
 
     const message = this.props.messages.map((message) => {
     //  console.log("dsdsd" + message.id)
-      return(
-        <div className="message" key={message.id}>
-          <span className="message-username">{message.username}</span>
-          <span className="message-content">{message.content}</span>
-        </div>);
+
+      switch(message.type) {
+        case "incomingMessage":
+          return(
+            <div className="message" key={message.id}>
+              <span className="message-username">{message.username}</span>
+              <span className="message-content">{message.content}</span>
+            </div>
+          );
+          break;
+        case "incomingNotification":
+          return (
+            <div className="message system">
+              {message.content}
+            </div>
+          )
+          break;
+        default:
+
+      }
+
     })
 
     console.log("rendering MessageList")
@@ -20,7 +36,7 @@ class MessageList extends Component {
     return (
       <main className="messages">
           {message}
-          <Message />
+
       </main>
 
     );

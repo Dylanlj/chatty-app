@@ -23,6 +23,9 @@ const wss = new SocketServer({ server });
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
+  // ws.addUser = "hiya"
+  // console.log(ws.addUser)
+  //console.log(wss.clients.has("WebSocket"))
 
   const outgoingEvent = (data) => {
     wss.clients.forEach(function each(client) {
@@ -42,23 +45,13 @@ wss.on('connection', (ws) => {
   outgoingEvent(connectionData)
 
 
-
-  // wss.clients.forEach(function each(client) {
-  //   data.content = "A new user has joined the chatroom"
-  //   data.type = "incomingNotification"
-  //   data.numberOfUsers = wss.clients.size
-  //   if (client.readyState === ws.OPEN) {
-  //     client.send(JSON.stringify(data));
-  //   }
-  // });
-
-
-
   ws.on('message', (evt) => {
     let data = JSON.parse(evt)
 
     if(data.type === "postNotification") {
       data.type = "incomingNotification"
+      data.content = data.content + data.newName
+      ws.user = data.newName
       console.log("receiving name change notification")
     } else if (data.type === "postMessage") {
       data.id = uuidv1()
@@ -74,7 +67,7 @@ wss.on('connection', (ws) => {
   ws.on('close', () =>
     {
       connectionData.numberOfUsers = wss.clients.size
-      connectionData.content = "A user has left the chatroom"
+      connectionData.content = `${ws.user} has left the chatroom`
       outgoingEvent(connectionData)
       console.log('Client disconnected')
     });

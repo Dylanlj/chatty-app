@@ -6,8 +6,9 @@ class ChatBar extends Component {
 
   render() {
     console.log("rendering ChatBar")
-    let user = (this.props.currentUser) ? this.props.currentUser : "Anonymous"
+    let user = (this.props.currentUser === "Anonymous") ? "" : this.props.currentUser
 
+console.log("should be anonymous"+user)
 
     return (
       <footer className="chatbar" >

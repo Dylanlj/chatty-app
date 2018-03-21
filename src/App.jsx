@@ -7,7 +7,10 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentUser: {name: "Bob"},
+      currentUser: {
+        name: "Anonymous",
+        color:""
+      },
       messages: [],
       numberOfUsers: 1
     }
@@ -23,26 +26,34 @@ class App extends Component {
 
 
     this.socket.onmessage = (evt) => {
-      console.log(evt)
+      // console.log(evt)
       const parsedEvent = JSON.parse(evt.data)
 
       switch(parsedEvent.type) {
         case "incomingMessage":
-
-          const newMessage = [{
+         const newMessage = [{
             content: parsedEvent.content,
             id: parsedEvent.id,
             username: parsedEvent.username,
-            type: parsedEvent.type
+            type: parsedEvent.type,
+            style: {color: this.state.currentUser.color}
           }]
+
           const mess = this.state.messages.concat(newMessage)
           this.setState({messages: mess})
 
           break;
         case "incomingNotification":
           if(parsedEvent.numberOfUsers) {
-            this.setState({numberOfUsers: parsedEvent.numberOfUsers})
+            const adjustUser = this.state.currentUser
+            adjustUser.color = parsedEvent.color
+            this.setState({
+              numberOfUsers: parsedEvent.numberOfUsers,
+              currentUser: adjustUser
+            })
+            console.log(this.state.currentUser)
           }
+
           const newNotification = {
             content: parsedEvent.content,
             type: parsedEvent.type,
@@ -91,7 +102,12 @@ class App extends Component {
           content: `${this.state.currentUser.name} has changed their name to `,
           newName: newUser
         }
-        this.setState({currentUser: {name: newUser}})
+        this.setState({
+          currentUser: {
+            name: newUser,
+            color: this.state.currentUser.color
+          }
+        })
         this.socket.send(JSON.stringify(postNameChange))
        }
 

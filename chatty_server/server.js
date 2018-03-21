@@ -23,23 +23,25 @@ const wss = new SocketServer({ server });
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
-  // ws.addUser = "hiya"
-  // console.log(ws.addUser)
-  //console.log(wss.clients.has("WebSocket"))
+  ws.user = "Anonymous"
 
   const outgoingEvent = (data) => {
     wss.clients.forEach(function each(client) {
-
       if (client.readyState === ws.OPEN) {
         client.send(JSON.stringify(data));
       }
     });
   }
+  const assignColor = () => {
+    const colors = ["#1AADD9", "#1AD987", "#D9771A", "#6530AB"]
+    return colors[Math.floor(Math.random() * 4)]
+  }
 
   let connectionData = {
     content: "A new user has joined the chatroom",
     type: "incomingNotification",
-    numberOfUsers: wss.clients.size
+    numberOfUsers: wss.clients.size,
+    color: assignColor()
   };
 
   outgoingEvent(connectionData)

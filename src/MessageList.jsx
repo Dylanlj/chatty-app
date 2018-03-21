@@ -9,12 +9,27 @@ class MessageList extends Component {
     const message = this.props.messages.map((message) => {
     //  console.log("dsdsd" + message.id)
 
+      let contentImage = ""
+      let contents = message.content
+      const end = (message.content.search(/gif|jpg|png/)) + 3
+      const beginning = (message.content.search("http"))
+      if(end && beginning !== -1 ) {
+        contentImage = contents.slice(beginning, end)
+        contents = contents.replace(contents.substring(beginning, end), "");
+      }
+
       switch(message.type) {
         case "incomingMessage":
           return(
-            <div className="message" key={message.id}>
+            <div>
+            <div style={message.style} className="message" key={message.id}>
               <span className="message-username">{message.username}</span>
-              <span className="message-content">{message.content}</span>
+              <span className="message-content">{contents}
+                <div>  <img className="image" src={contentImage} /> </div>
+              </span>
+
+            </div>
+
             </div>
           );
           break;
@@ -44,56 +59,3 @@ class MessageList extends Component {
 }
 export default MessageList;
 
-
-
-// <main class="messages">
-//   <div class="message">
-//     <span class="message-username">Anonymous1</span>
-//     <span class="message-content">I won't be impressed with technology until I can download food.</span>
-//   </div>
-//   <div class="message system">
-//     Anonymous1 changed their name to nomnom.
-//   </div>
-//   <div id="react-root"></div>
-//   <script src="/build/bundle.js"></script>
-// </main>
-
-
-
-// state.messages = [
-//         {
-//             type: "incomingMessage",
-//             content: "I won't be impressed with technology until I can download food.",
-//             username: "Anonymous1"
-//         },
-//         {
-//             type: "incomingNotification",
-//             content: "Anonymous1 changed their name to nomnom",
-//         },
-//         {
-//             type: "incomingMessage",
-//             content: "I wouldn't want to download Kraft Dinner. I'd be scared of cheese packet loss.",
-//             username: "Anonymous2"
-//         },
-//         {
-//             type: "incomingMessage",
-//             content: "...",
-//             username: "nomnom"
-//         },
-//         {
-//             type: "incomingMessage",
-//             content: "I'd love to download a fried egg, but I'm afraid encryption would scramble it",
-//             username: "Anonymous2"
-//         },
-//         {
-//             type: "incomingMessage",
-//             content: "This isn't funny. You're not funny",
-//             username: "nomnom"
-//         },
-//         {
-//             type: "incomingNotification",
-//             content: "Anonymous2 changed their name to NotFunny",
-
-//         },
-
-//     ]

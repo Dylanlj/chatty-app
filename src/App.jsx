@@ -51,7 +51,7 @@ class App extends Component {
               numberOfUsers: parsedEvent.numberOfUsers,
               currentUser: adjustUser
             })
-            console.log(this.state.currentUser)
+
           }
 
           const newNotification = {

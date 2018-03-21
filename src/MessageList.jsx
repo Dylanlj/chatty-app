@@ -9,26 +9,32 @@ class MessageList extends Component {
     const message = this.props.messages.map((message) => {
     //  console.log("dsdsd" + message.id)
 
-      let contentImage = ""
-      let contents = message.content
-      const end = (message.content.search(/gif|jpg|png/)) + 3
-      const beginning = (message.content.search("http"))
-      if(end && beginning !== -1 ) {
-        contentImage = contents.slice(beginning, end)
-        contents = contents.replace(contents.substring(beginning, end), "");
+
+      let messageContents = message.content
+
+      var myRe = /http.+?(png|jpg|gif)/ig;
+
+      const myImages =[];
+      var myArray;
+      while ((myArray = myRe.exec(message.content)) !== null) {
+        messageContents = messageContents.replace(myArray[0], "")
+        myImages.push(myArray[0])
       }
+
+      const contentImage = myImages.map((imageUrl) => {
+        return <img className="image" src={imageUrl} />
+      })
 
       switch(message.type) {
         case "incomingMessage":
           return(
-            <div>
             <div style={message.style} className="message" key={message.id}>
               <span className="message-username">{message.username}</span>
-              <span className="message-content">{contents}
-                <div>  <img className="image" src={contentImage} /> </div>
+              <span className="message-content">{messageContents}
+
+                <div>{contentImage}</div>
               </span>
 
-            </div>
 
             </div>
           );

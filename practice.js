@@ -1,6 +1,21 @@
-let image = "https://t00.deviantart.net/2j8sOi__1no2944FC4kGZYFSfLg=/fit-in/700x350/filters:fixed_height(100,100):origin()/pre00/e5df/th/pre/i/2018/080/6/a/sleep_paralysis_by_madink2000-dc6itym.jpg"
+// var re = /quick\s(brown).+?(jumps)/ig;
+// var result = re.exec('The Quick Brown Fox Jumps Over The Lazy Dog');
 
-let end = (image.search(/gif|jpg|png/))
-let beginning = (image.search("http"))
-let all = image.slice(beginning, end + 3)
-console.log(all)
+// console.log(result)
+
+
+var myRe = /http.+?(png|jpg|gif)/ig;
+var str = 'heyshdhd https://www.google.ca/images/branding/googlelogo/2x/googlelogo_color_272x92dp.jpg https://www.google.ca/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png';
+const myObject ={};
+var myArray;
+while ((myArray = myRe.exec(str)) !== null) {
+  var msg = 'Found ' + myArray[0];
+  myObject[myRe.lastIndex] = myArray[0]
+  // msg += 'Next match starts at ' + myRe.lastIndex;
+  console.log(msg);
+}
+
+
+const bar = {2:"hello"}
+console.log(bar["2"])
+console.log(myObject)

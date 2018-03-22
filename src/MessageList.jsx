@@ -1,65 +1,52 @@
 
 import React, {Component} from 'react';
-import Message      from './Message.jsx';
 
 class MessageList extends Component {
   render() {
-
-
+    //rendering the entire message list
     const message = this.props.messages.map((message) => {
-    //  console.log("dsdsd" + message.id)
-
 
       let messageContents = message.content
-
-      var myRe = /http.+?(png|jpg|gif)/ig;
-
-      const myImages =[];
+      var regEx = /http.+?(png|jpg|gif)/ig;
+      const foundImages =[];
       var myArray;
-      while ((myArray = myRe.exec(message.content)) !== null) {
+      //finds imageUrls, removes them from the message contents and adds them to an array
+      while ((myArray = regEx.exec(message.content)) !== null) {
         messageContents = messageContents.replace(myArray[0], "")
-        myImages.push(myArray[0])
+        foundImages.push(myArray[0])
       }
-
-      const contentImage = myImages.map((imageUrl) => {
+      //adds the images to the message
+      const contentImage = foundImages.map((imageUrl) => {
         return <img className="image" src={imageUrl} />
       })
-
       switch(message.type) {
         case "incomingMessage":
           return(
             <div style={message.style} className="message" key={message.id}>
               <span className="message-username">{message.username}</span>
               <span className="message-content">{messageContents}
-
                 <div>{contentImage}</div>
               </span>
-
-
             </div>
           );
           break;
         case "incomingNotification":
           return (
-            <div className="message system">
+            <div key={message.id} className="message system">
               {message.content}
             </div>
           )
           break;
         default:
-
       }
-
     })
 
-    console.log("rendering MessageList")
 
+    console.log("rendering MessageList")
     return (
       <main className="messages">
           {message}
-
       </main>
-
     );
   }
 }

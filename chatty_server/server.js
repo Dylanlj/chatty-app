@@ -25,47 +25,39 @@ wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.user = "Anonymous"
 
+//adds an id and sends a message to all connected clients
   const outgoingEvent = (data) => {
+    data.id = uuidv1()
     wss.clients.forEach(function each(client) {
       if (client.readyState === ws.OPEN) {
         client.send(JSON.stringify(data));
       }
     });
   }
-  const assignColor = () => {
-    const colors = ["#1AADD9", "#1AD987", "#D9771A", "#6530AB"]
-    return colors[Math.floor(Math.random() * 4)]
-  }
 
+//sends a notification when a new user connects
   let connectionData = {
     content: "A new user has joined the chatroom",
     type: "incomingNotification",
     numberOfUsers: wss.clients.size,
-    color: assignColor()
   };
-
   outgoingEvent(connectionData)
 
-
+//when a message is sent, sends it to all userss
   ws.on('message', (evt) => {
     let data = JSON.parse(evt)
-
     if(data.type === "postNotification") {
       data.type = "incomingNotification"
       data.content = data.content + data.newName
       ws.user = data.newName
       console.log("receiving name change notification")
     } else if (data.type === "postMessage") {
-      data.id = uuidv1()
       data.type = "incomingMessage"
     }
     outgoingEvent(data)
-
   })
 
-
-
-  // Set up a callback for when a client closes the socket. This usually means they closed their browser.
+  // sends a message when a user leaves
   ws.on('close', () =>
     {
       connectionData.numberOfUsers = wss.clients.size

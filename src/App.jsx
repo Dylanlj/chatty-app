@@ -26,14 +26,18 @@ class App extends Component {
     this.socket = new WebSocket('ws://localhost:3001')
     this.socket.onopen = (event) => {
       console.log('Connected to server');
-      const assignColor = () => {
-        const colors = ['#1AADD9', '#1AD987', '#D9771A', '#6530AB']
-        return colors[Math.floor(Math.random() * colors.length)]
+      function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
       }
       this.setState({
         currentUser: {
           name: 'Anonymous',
-          color: assignColor()
+          color: getRandomColor()
         }
 
       })

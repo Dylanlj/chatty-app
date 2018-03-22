@@ -76,7 +76,6 @@ class App extends Component {
           default:
             throw new Error('Unknown event type ' + parsedEvent.type)
       }
-      //console.log(this.state)
     }
   }
 

@@ -12,39 +12,39 @@ class MessageList extends Component {
       var myArray;
       //finds imageUrls, removes them from the message contents and adds them to an array
       while ((myArray = regEx.exec(message.content)) !== null) {
-        messageContents = messageContents.replace(myArray[0], "")
+        messageContents = messageContents.replace(myArray[0], '')
         foundImages.push(myArray[0])
       }
       //adds the images to the message
       const contentImage = foundImages.map((imageUrl) => {
-        return <img className="image" src={imageUrl} />
+        return <img className='image' src={imageUrl} />
       })
       switch(message.type) {
-        case "incomingMessage":
+        case 'incomingMessage':
           return(
-            <div style={message.style} className="message" key={message.id}>
-              <span className="message-username">{message.username}</span>
-              <span className="message-content">{messageContents}
+            <div style={message.style} className='message' key={message.id}>
+              <span className='message-username'>{message.username}</span>
+              <span className='message-content'>{messageContents}
                 <div>{contentImage}</div>
               </span>
             </div>
           );
-          break;
-        case "incomingNotification":
+
+        case 'incomingNotification':
           return (
-            <div key={message.id} className="message system">
+            <div key={message.id} className='message system'>
               {message.content}
             </div>
           )
-          break;
+
         default:
       }
     })
 
 
-    console.log("rendering MessageList")
+    console.log('rendering MessageList')
     return (
-      <main className="messages">
+      <main className='messages'>
           {message}
       </main>
     );

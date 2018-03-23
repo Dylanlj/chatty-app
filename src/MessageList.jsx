@@ -13,19 +13,16 @@ class MessageList extends Component {
       //finds imageUrls, removes them from the message contents and adds them to an array
       while ((myArray = regEx.exec(message.content)) !== null) {
         messageContents = messageContents.replace(myArray[0], '')
-        foundImages.push(myArray[0])
+        foundImages.push(<img className='image' src={myArray[0]} />)
       }
-      //adds the images to the message
-      const contentImage = foundImages.map((imageUrl) => {
-        return <img className='image' src={imageUrl} />
-      })
+
       switch(message.type) {
         case 'incomingMessage':
           return(
             <div style={message.style} className='message' key={message.id}>
               <span className='message-username'>{message.username}</span>
               <span className='message-content'>{messageContents}
-                <div>{contentImage}</div>
+                <div>{foundImages}</div>
               </span>
             </div>
           );

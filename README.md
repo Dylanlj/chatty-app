@@ -1,7 +1,7 @@
 Chatty App
 =====================
 
-A single page app that lets users chat with each other, add and change their username,  and share images with each other. The app will randomly assign a colour to a user, and send a notification when a user logs in and out. Makes use of React, and a websocket server to connect users.
+A single page app that lets users chat with each other, add and change their username,  and share images with each other. The app will randomly assign a colour to a user, and send a notification when a user logs in and out. Makes use of React, and a WebSocket server to connect users.
 
 ## Screenshots
 !["Screenshot description"](https://github.com/Dylanlj/chatty-app/blob/master/docs/saul-goodman.png?raw=true)
